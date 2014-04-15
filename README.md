@@ -7,3 +7,4 @@ The primary objective of this project is the development of an innovative hardwa
 
 Developed by: Immersive and Creative Technologies Lab (http://www.theICTlab.org), Cyprus University of Technology
 
+Part of the 3DUNDERWORLD project: http://www.3dunderworld.org
