@@ -8,3 +8,32 @@ The primary objective of this project is the development of an innovative hardwa
 Developed by: Immersive and Creative Technologies Lab (http://www.theICTlab.org), Cyprus University of Technology
 
 Part of the 3DUNDERWORLD project: http://www.3dunderworld.org
+
+*IMPORTANT: To use this software, YOU MUST CITE the following in any resulting publication:*
+
+@article{herakleous20143dunderworld,
+  title={3DUNDERWORLD-SLS: An Open-Source Structured-Light Scanning System for Rapid Geometry Acquisition},
+  author={Herakleous, Kyriakos and Poullis, Charalambos},
+  journal={arXiv preprint arXiv:1406.6595},
+  year={2014}
+}
+
+@article{poullis2013framework,
+  title={A Framework for Automatic Modeling from Point Cloud Data},
+  author={Poullis, Charalambos},
+  journal={Pattern Analysis and Machine Intelligence, IEEE Transactions on},
+  volume={35},
+  number={11},
+  pages={2563--2575},
+  year={2013},
+  publisher={IEEE}
+}
+
+@inproceedings{poullis2009automatic,
+  title={Automatic reconstruction of cities from remote sensor data},
+  author={Poullis, Charalambos and You, Suya},
+  booktitle={Computer Vision and Pattern Recognition, 2009. CVPR 2009. IEEE Conference on},
+  pages={2775--2782},
+  year={2009},
+  organization={IEEE}
+}
