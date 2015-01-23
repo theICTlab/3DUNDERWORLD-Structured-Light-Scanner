@@ -9,7 +9,6 @@ Developed by: Immersive and Creative Technologies Lab (http://www.theICTlab.org)
 
 Part of the 3DUNDERWORLD project: http://www.3dunderworld.org
 
-
 *IMPORTANT: To use this software, YOU MUST CITE the following in any resulting publication:*
 
 @article{herakleous20143dunderworld,
