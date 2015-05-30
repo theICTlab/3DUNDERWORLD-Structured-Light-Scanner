@@ -1,11 +1,10 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://ict.cut.ac.cy                                                                               *
+//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://www.theICTlab.org                                                                           *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
-//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
+//* License: Check the file License.md                                                                       *
 //------------------------------------------------------------------------------------------------------------
 
 #include "stdafx.h"
@@ -255,7 +254,7 @@ void printCopyRight()
 {
 	std::cout<<"\n";
 	std::cout<<"---------------------------------------------------------------------\n";
-	std::cout<<"* Copyright © 2010-2013 Immersive and Creative Technologies Lab,    *\n";
+	std::cout<<"* Copyright Â© 2010-2013 Immersive and Creative Technologies Lab,    *\n";
 	std::cout<<"* Cyprus University of Technology                                   *\n";
 	std::cout<<"* Link: http://ict.cut.ac.cy                                        *\n";
 	std::cout<<"* Software developer(s): Kyriakos Herakleous                        *\n";
