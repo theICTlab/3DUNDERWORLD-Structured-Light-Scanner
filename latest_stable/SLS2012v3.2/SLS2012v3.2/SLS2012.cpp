@@ -1,25 +1,27 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
 #include "stdafx.h"
-#include <stdio.h>
-#include <iostream>
-#include "SLS2012.h"
+//#include <stdio.h>
+//#include <iostream>
+#include "CameraCalibration.h"
+//#include "SLS2012.h"
 #include "GrayCodes.h"
 #include "Projector.h"
 #include "Scanner.h"
 #include "Reconstructor.h"
 #include "PointCloudImage.h"
 #include "MeshCreator.h"
-#include "CameraCalibration.h"
-#include <direct.h>
-#include <windows.h>
+
+//#include <direct.h>
+//#include <windows.h>
 
 
 int proj_h;
@@ -52,10 +54,10 @@ void projectGraysOnly()
 	Projector *proj=new Projector(proj_w,proj_h);
 
 	int i=0;
-	int key = cvWaitKey(10);
+	int key = cv::waitKey(10);
 	while(true)
 	{
-		key = cvWaitKey(10);
+		key = cv::waitKey(10);
 		proj->showImg( grayCode->getImg(i));
 
 		if(key == 13)
@@ -254,7 +256,7 @@ void printCopyRight()
 {
 	std::cout<<"\n";
 	std::cout<<"---------------------------------------------------------------------\n";
-	std::cout<<"* Copyright Â© 2010-2013 Immersive and Creative Technologies Lab,    *\n";
+	std::cout<<"* Copyright © 2010-2013 Immersive and Creative Technologies Lab,    *\n";
 	std::cout<<"* Cyprus University of Technology                                   *\n";
 	std::cout<<"* Link: http://ict.cut.ac.cy                                        *\n";
 	std::cout<<"* Software developer(s): Kyriakos Herakleous                        *\n";
@@ -388,19 +390,19 @@ void calibration()
 
 	for(int i=1; i<=sel; i++)
 	{
-		CameraCalibration *calib = new CameraCalibration();
+		CameraCalibration calib;
 
 		std::string path = "camera";
 		path += '0' + i;
 		path += '/';
 
 		//load images
-		calib->loadCameraImgs(path.c_str());
+		calib.loadCameraImgs(path.c_str());
 	
-		calib->extractImageCorners();
-		calib->calibrateCamera();
+		calib.extractImageCorners();
+		calib.calibrateCamera();
 	
-		calib->findCameraExtrisics();
+		calib.findCameraExtrisics();
 
 		//export txt files
 		std::string file_name;
@@ -410,29 +412,29 @@ void calibration()
 		file_name =  path.c_str();
 		file_name += "cam_matrix.txt";
 
-		calib->exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_MATRIX);
+		calib.exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_MATRIX);
 
 		file_name =  path.c_str();
 		file_name += "cam_distortion.txt";
 
-		calib->exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_DISTORTION);
+		calib.exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_DISTORTION);
 
 		file_name =  path.c_str();
 		file_name += "cam_rotation_matrix.txt";
 
-		calib->exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_ROTATION);
+		calib.exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_ROTATION);
 
 		file_name =  path.c_str();
 		file_name += "cam_trans_vectror.txt";
 
-		calib->exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_TRANSLATION);
+		calib.exportTxtFiles(file_name.c_str(),CAMCALIB_OUT_TRANSLATION);
 
 		file_name =  path.c_str();
 		file_name += "calib.xml";
-		calib->saveCalibData(file_name.c_str());
+		calib.saveCalibData(file_name.c_str());
 
 		// show data on consol
-		calib->printData();
+		calib.printData();
 	}
 	getchar();
 }
@@ -489,7 +491,7 @@ void captureCalibrationImagesAndScan()
 	for(int i=0; i<numOfCams; i++)
 	{
 			
-		cvWaitKey(1);
+		cv::waitKey(1);
 			
 		std::cout << "\nPress 'Enter' to capture photos for camera calibration. When you are done press 'Space'.\n" << std::endl;
 
@@ -560,8 +562,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	printCopyRight();
 
 	//load configurations
-	if(!loadConfigurations())
-	{
+	if (!loadConfigurations()) {
 		std::cout<<"A new one with default settings has been created.\n\n";
 		createConfigurationFile("slsConfig.xml");
 		loadConfigurations();
@@ -577,8 +578,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	Scanner *scanner;
 
-	switch(select)
-	{
+	switch(select) {
 		case 1:
 			rename();
 			break;
@@ -618,6 +618,3 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	return 1;
 }
-
-
-

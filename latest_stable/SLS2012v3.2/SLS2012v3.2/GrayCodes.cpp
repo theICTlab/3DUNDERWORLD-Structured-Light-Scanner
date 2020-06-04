@@ -1,10 +1,11 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
 #include "stdafx.h"
@@ -15,7 +16,8 @@ GrayCodes::GrayCodes(int projW, int projH)
 {
 	for (int i=0; i<GRAY_MAX_NUM; i++)
 	{
-		grayCodes[i]=NULL;
+		// OpenCV_4
+		//grayCodes[i]=NULL;
 
 	}
 
@@ -56,39 +58,45 @@ void GrayCodes::calNumOfImgs()
 
 void GrayCodes::unload()
 {
-
-	for(int i=0; i < numOfImgs;i++ )
-	{
-		if(grayCodes[i])
-		{
-			cvReleaseImage(&grayCodes[i]);
-			grayCodes[i]=NULL;
-		}
-	}
+	// OpenCV_4
+	//for(int i=0; i < numOfImgs;i++ )
+	//{
+		//if(grayCodes[i])
+		//{
+			// OpenCV_4
+			//cv::ReleaseImage(&grayCodes[i]);
+			//grayCodes[i]=NULL;
+//		}
+	//}
 	imgsLoaded=false;
 }
 
-IplImage* GrayCodes::getImg(int num)
+//OpenCV_4
+//IplImage* GrayCodes::getImg(int num)
+cv::Mat& GrayCodes::getImg(int num)
 {
+	cv::Mat loc_Ret;
+
 	if(num<numOfImgs)
 	{
 		currentImgNum = num;
-		return grayCodes[num];
+		return m_grayCodes[num];
 	}
 	else
-		return NULL;
+		return loc_Ret;
 }
 
-IplImage* GrayCodes::getNextImg()
+// IplImage* GrayCodes::getNextImg()
+cv::Mat& GrayCodes::getNextImg()
 {
-	
+	cv::Mat loc_Ret;
 	if(currentImgNum<numOfImgs)
 	{
 		currentImgNum++;
-		return grayCodes[currentImgNum-1];
+		return m_grayCodes[currentImgNum-1];
 	}
 	else
-		return NULL;
+		return loc_Ret;
 }
 
 int GrayCodes::getNumOfImgs()
@@ -99,10 +107,12 @@ int GrayCodes::getNumOfImgs()
 
 void GrayCodes::allocMemForImgs()
 {
+	cv::Mat dest;
 
 	for(int i=0; i<numOfImgs; i++)
 	{
-		grayCodes[i]=cvCreateImage(cvSize(width,height),IPL_DEPTH_8U,1);
+		//grayCodes[i]=cvCreateImage(cvSize(width,height),IPL_DEPTH_8U,1);
+		m_grayCodes[i].create(cv::Size(width,height),CV_8U);
 	}
 	imgsLoaded=true;
 }
@@ -121,10 +131,15 @@ void GrayCodes::generateGrays()
 		{
 			CvScalar pixel_color;
 			pixel_color.val[0] = 255;
-			cvSet2D(grayCodes[0], i, j, pixel_color);
+			// OpenCV_4
+			// cvSet2D(grayCodes[0], i, j, pixel_color);
+			m_grayCodes[0].at<uchar>(i, j) = 255;
 
+	
 			pixel_color.val[0] = 0;
-			cvSet2D(grayCodes[1], i, j, pixel_color);
+			// OpenCV_4
+			// cvSet2D(grayCodes[1], i, j, pixel_color);
+			m_grayCodes[1].at<uchar>(i, j) = 0;
 		} 
 	}
 
@@ -152,16 +167,20 @@ void GrayCodes::generateGrays()
 
 			for (int i=0;i<height;i++)	
 			{
-				CvScalar pixel_color;
+				cv::Scalar pixel_color;
 				pixel_color.val[0] = float(flag*255);
-				cvSet2D(grayCodes[2*numOfColImgs-2*k], i, j, pixel_color);
+				// OpenCV_4
+				// cvSet2D(grayCodes[2*numOfColImgs-2*k], i, j, pixel_color);
+				m_grayCodes[2 * numOfColImgs - 2 * k].at<uchar>(i, j) = 0;
 
 				if(pixel_color.val[0]>0)
 					pixel_color.val[0]=0;
 				else
 					pixel_color.val[0]=255;
 
-				cvSet2D(grayCodes[2*numOfColImgs-2*k+1], i, j, pixel_color);
+				// OpenCV_4
+				// cvSet2D(grayCodes[2*numOfColImgs-2*k+1], i, j, pixel_color);
+				m_grayCodes[2 * numOfColImgs - 2 * k + 1].at<uchar>(i, j) = pixel_color.val[0];
 			}
 
 			prevRem=rem;
@@ -190,16 +209,19 @@ void GrayCodes::generateGrays()
 
 			for (int j=0; j<width; j++)	
 			{
-				CvScalar pixel_color;
+				cv::Scalar pixel_color;
 				pixel_color.val[0] = float(flag*255);
-				cvSet2D(grayCodes[2*numOfRowImgs-2*k+2*numOfColImgs], i, j, pixel_color);
+				// OpenCV_4
+				// cvSet2D(grayCodes[2*numOfRowImgs-2*k+2*numOfColImgs], i, j, pixel_color);
+				m_grayCodes[2 * numOfRowImgs - 2 * k + 2 * numOfColImgs].at<uchar>(i, j) = pixel_color.val[0];
 
 				if(pixel_color.val[0]>0)
 					pixel_color.val[0]=0;
 				else
 					pixel_color.val[0]=255;
-
-				cvSet2D(grayCodes[2*numOfRowImgs-2*k+2*numOfColImgs+1], i, j, pixel_color);
+				// OpenCV_4
+				// cvSet2D(grayCodes[2*numOfRowImgs-2*k+2*numOfColImgs+1], i, j, pixel_color);
+				m_grayCodes[2 * numOfRowImgs - 2 * k + 2 * numOfColImgs + 1].at<uchar>(i, j) = pixel_color.val[0];
 			}
 
 			prevRem=rem;
@@ -219,7 +241,9 @@ void GrayCodes::save()
 		
 		path<< i+1 <<".png";
 
-		cvSaveImage(path.str().c_str(),grayCodes[i]);
+		// OpenCV_4
+		// cvSaveImage(path.str().c_str(),grayCodes[i]);
+		cv::imwrite(path.str().c_str(), m_grayCodes[i]);
 	}
 }
 

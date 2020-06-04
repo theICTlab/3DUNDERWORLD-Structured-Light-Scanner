@@ -1,11 +1,3 @@
-//------------------------------------------------------------------------------------------------------------
-//* Copyright © 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
-//* Software developer(s): Kyriakos Herakleous                                                               *
-//* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
-//*                                                                                                          *
-//* License: Check the file License.md                                                                       *
-//------------------------------------------------------------------------------------------------------------
 
 
 #include "StdAfx.h"

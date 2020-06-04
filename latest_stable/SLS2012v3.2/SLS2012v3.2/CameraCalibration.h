@@ -1,33 +1,36 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
-#pragma once
+#ifndef _CAMERACALIBRATION_H
+#define _CAMERACALIBRATION_H 1
 
 #include <conio.h>
 #include <iostream>
-#include "cv.h"
-#include "highgui.h"
+#include <opencv2/core/core.hpp>
+//#include <opencv2/highgui/highgui.hpp>
+//#include <opencv2/core/operations.hpp>
+//#include <opencv2/imgproc.hpp>
+//#include <opencv2/calib3d.hpp>
 #include "Utilities.h"
-#include <direct.h>
-
+//#include <direct.h>
+#define CAMCALIB_OUT_MATRIX 1
+#define CAMCALIB_OUT_DISTORTION 2
+#define CAMCALIB_OUT_ROTATION 3
+#define CAMCALIB_OUT_TRANSLATION 4
 
 
 class CameraCalibration
 {
 	 
 public:
-
-	#define CAMCALIB_OUT_MATRIX 1
-	#define CAMCALIB_OUT_DISTORTION 2
-	#define CAMCALIB_OUT_ROTATION 3
-	#define CAMCALIB_OUT_TRANSLATION 4
-
+	
 	CameraCalibration(void);
 	~CameraCalibration(void);
 
@@ -74,7 +77,7 @@ private:
 	cv::vector<cv::vector<cv::Point3f>> objBoardCornersCam;
 	
 	//images
-	cv::Vector<cv::Mat> calibImgs;
+	cv::vector<cv::Mat> calibImgs;
 	cv::Mat				extrImg;
 
 	cv::Size	squareSize;
@@ -86,3 +89,4 @@ private:
 
 };
 
+#endif

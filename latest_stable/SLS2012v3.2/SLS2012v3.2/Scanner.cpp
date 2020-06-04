@@ -1,10 +1,11 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
 #include "StdAfx.h"
@@ -13,10 +14,39 @@
 
 Scanner::Scanner(bool webCam)
 {
+	EdsError	 err = EDS_ERR_OK;
+	EdsCameraListRef cameraList = NULL;
+	EdsCameraRef camera = NULL;
+	EdsUInt32	 count = 0;
+	bool		 isSDKLoaded = false;
+
+	// Initialization of SDK
+	err = EdsInitializeSDK();
+
+	if (err == EDS_ERR_OK)
+	{
+		isSDKLoaded = true;
+	}
+
+	//Acquisition of camera list
+	if (err == EDS_ERR_OK)
+	{
+		err = EdsGetCameraList(&cameraList);
+	}
+
+	//Acquisition of number of Cameras
+	if (err == EDS_ERR_OK)
+	{
+		err = EdsGetChildCount(cameraList, &count);
+		if (count == 0)
+		{
+			err = EDS_ERR_DEVICE_NOT_FOUND;
+		}
+	}
+
 	web=webCam;
 	proj=new Projector(proj_w,proj_h);
 	whiteImg = cv::Mat::ones(proj_h,proj_w,CV_8U)*255;
-	EdsInitializeSDK();
 }
 
 
@@ -45,7 +75,7 @@ bool Scanner::capturePhotoSequence(CameraController *camera)
 
 		camera->UpdateView();
 
-		key = cvWaitKey(10);
+		key = cv::waitKey(10);
 
 		///If enter is pressed then capture the image
 		if (key == 13)
@@ -66,7 +96,7 @@ bool Scanner::capturePhotoSequence(CameraController *camera)
 
 	camera->endLiveview();
 
-	cvWaitKey(100);
+	cv::waitKey(100);
 	if(key == 27)
 		return 0;
 	else 
@@ -99,7 +129,7 @@ bool Scanner::capturePhotoSequence(CameraController *camera, char* path)
 	
 		camera->UpdateView();
 
-		key = cvWaitKey(10);
+		key = cv::waitKey(10);
 
 		///If enter is pressed then capture the image
 		if (key == 13)
@@ -119,7 +149,7 @@ bool Scanner::capturePhotoSequence(CameraController *camera, char* path)
 
 	camera->endLiveview();
 
-	cvWaitKey(100);
+	cv::waitKey(100);
 
 	if(key == 27)
 		return 0;
@@ -147,8 +177,8 @@ void Scanner::capturePaterns(CameraController *camera[],int camCount)
 		
 	int key=0;
 		
-	while(key!=13)
-		key = cvWaitKey(10);
+	while(key==0)
+		key = cv::waitKey(10);
 
 	int grayCount=0;
 
@@ -182,13 +212,13 @@ void Scanner::capturePaterns(CameraController *camera[],int camCount)
 		
 		
 
-		key=cvWaitKey(100);
+		key=cv::waitKey(100);
 	
 		if(key == 27)
 			break;
 	}
 
-	cvWaitKey(300);
+	cv::waitKey(300);
 
 }
 
@@ -216,7 +246,7 @@ bool Scanner::capturePhotoAllCams(CameraController *cameras[],int camCount)
 			cameras[i]->UpdateView();
 		}
 		
-		key = cvWaitKey(10);
+		key = cv::waitKey(10);
 
 		///If enter is pressed then capture the image
 		if (key == 13)
@@ -242,7 +272,7 @@ bool Scanner::capturePhotoAllCams(CameraController *cameras[],int camCount)
 		cameras[i]->endLiveview();
 	}
 
-	cvWaitKey(100);
+	cv::waitKey(100);
 
 	if(key == 27)
 		return 0;

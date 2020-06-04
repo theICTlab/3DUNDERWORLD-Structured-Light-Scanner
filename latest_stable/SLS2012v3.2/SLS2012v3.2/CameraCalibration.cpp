@@ -1,13 +1,16 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
 #include "StdAfx.h"
+#include <opencv2/calib3d.hpp>
+#include <opencv2/imgproc.hpp>
 #include "CameraCalibration.h"
 
 CameraCalibration::CameraCalibration(void)
@@ -224,7 +227,7 @@ void calib_board_corners_mouse_callback( int event, int x, int y, int flags, voi
 	switch( event )
 	{
 		
-		case CV_EVENT_LBUTTONDOWN:
+	case cv::EVENT_LBUTTONDOWN:
 			if(corners->size() ==4)
 				break;
 			corners->push_back(cv::Point(x,y));
@@ -241,7 +244,7 @@ void image_point_return( int event, int x, int y, int flags, void* param )
 
 	switch( event )
 	{
-		case CV_EVENT_LBUTTONDOWN:
+	case cv::EVENT_LBUTTONDOWN:
 			
 			point->val[0]=x;
 			point->val[1]=y;
@@ -316,7 +319,7 @@ cv::vector<cv::Point2f>  CameraCalibration::manualMarkCheckBoard(cv::Mat img)
 	
 	cv::vector<cv::Point2f> corners;
 		
-	cv::namedWindow("Mark Calibration Board",CV_WINDOW_NORMAL);
+	cv::namedWindow("Mark Calibration Board",cv::WINDOW_NORMAL);
 	cv::resizeWindow("Mark Calibration Board",800,600);
 
 	//Set a mouse callback
@@ -399,7 +402,7 @@ float CameraCalibration::markWhite(cv::Mat img)
 {
 	
 		float white;
-		cv::namedWindow("Mark White",CV_WINDOW_NORMAL);
+		cv::namedWindow("Mark White",cv::WINDOW_NORMAL);
 		cv::resizeWindow("Mark White",800,600);
 
 		cv::Scalar point;
@@ -452,7 +455,7 @@ float CameraCalibration::markWhite(cv::Mat img)
 			img_copy.release();
 		}
 
-		cvDestroyWindow("Mark White");
+		cv::destroyWindow("Mark White");
 		
 
 		return white;
@@ -476,7 +479,7 @@ bool CameraCalibration:: findCornersInCamImg(cv::Mat img,cv::vector<cv::Point2f>
 	while(!found)
 	{
 		//convert the copy to gray
-		cv::cvtColor( img, img_grey, CV_RGB2GRAY );
+		cv::cvtColor( img, img_grey, cv::COLOR_RGB2GRAY);
 		img.copyTo(img_copy);
 
 		//ask user to mark 4 corners of the checkboard
@@ -488,7 +491,7 @@ bool CameraCalibration:: findCornersInCamImg(cv::Mat img,cv::vector<cv::Point2f>
 		drawOutsideOfRectangle(img_grey,chessBoardCorners, color);
 
 		//show img to user
-		cv::namedWindow("Calibration",CV_WINDOW_NORMAL);
+		cv::namedWindow("Calibration",cv::WINDOW_NORMAL);
 		cv::resizeWindow("Calibration",800,600);
 
 		cv::imshow("Calibration",img_grey);
@@ -515,7 +518,7 @@ bool CameraCalibration:: findCornersInCamImg(cv::Mat img,cv::vector<cv::Point2f>
 		numOfCornersY--;
 		
 		
-		found=cv::findChessboardCorners(img_grey, cvSize(numOfCornersX,numOfCornersY), *camCorners, CV_CALIB_CB_ADAPTIVE_THRESH );
+		found=cv::findChessboardCorners(img_grey, cvSize(numOfCornersX,numOfCornersY), *camCorners, cv::CALIB_CB_ADAPTIVE_THRESH );
 
 		std::cout<<"found = "<<camCorners->size()<<"\n";
 
@@ -548,7 +551,7 @@ bool CameraCalibration:: findCornersInCamImg(cv::Mat img,cv::vector<cv::Point2f>
 	{
 
 		//convert the copy to gray
-		cv::cvtColor( img, img_grey, CV_RGB2GRAY );
+		cv::cvtColor( img, img_grey, cv::COLOR_RGB2GRAY );
 
 		//find sub pix of the corners
 		cv::cornerSubPix(img_grey, *camCorners, cvSize(20,20), cvSize(-1,-1), cvTermCriteria(CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 30, 0.1));
@@ -642,7 +645,7 @@ void CameraCalibration::manualMarkCalibBoardCorners(cv::Mat img,cv::vector<cv::P
 	cv::Mat img_grey;
 
 	img.copyTo(img_copy);
-	cv::cvtColor( img, img_grey, CV_BGR2GRAY );
+	cv::cvtColor( img, img_grey, cv::COLOR_BGR2GRAY );
 	
 	//get calibration board corners
 	cv::vector<cv::Point2f> imgPoints = manualMarkCheckBoard(img_copy);
@@ -663,7 +666,7 @@ void CameraCalibration::manualMarkCalibBoardCorners(cv::Mat img,cv::vector<cv::P
 	cv::line(img_copy, imgPoints[3],imgPoints[0],cvScalar(0,255,0),3);
 		
 	
-	cv::namedWindow("Marked Board",CV_WINDOW_NORMAL);
+	cv::namedWindow("Marked Board",cv::WINDOW_NORMAL);
 	cv::resizeWindow("Marked Board",800,600);
 	cv::imshow("Marked Board", img_copy);
 

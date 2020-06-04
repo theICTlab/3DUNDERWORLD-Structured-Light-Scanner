@@ -1,14 +1,17 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
 #include "StdAfx.h"
+#include <opencv2/core/core_c.h>
 #include "CanonCamera.h"
+
 
 int CanonCamera::numOfCameras = 0;
 
@@ -62,8 +65,6 @@ CanonCamera::CanonCamera(void)
 		getch();
 		exit(-1);
 	}
-	
-
 }
 
 CanonCamera::~CanonCamera(void)
@@ -75,9 +76,8 @@ CanonCamera::~CanonCamera(void)
 
 EdsError CanonCamera::startLiveview()
 {
-
-	cvNamedWindow(windowName.c_str(),CV_WINDOW_AUTOSIZE);
-	cvResizeWindow(windowName.c_str(),640,480);
+	cv::namedWindow(windowName.c_str(),cv::WINDOW_AUTOSIZE);
+	cv::resizeWindow(windowName.c_str(),640,480);
 
 	EdsError err = EDS_ERR_OK;
 
@@ -109,7 +109,7 @@ EdsError CanonCamera::endLiveview()
 		err = EdsSetPropertyData(camera, kEdsPropID_Evf_OutputDevice, 0 , sizeof(device), &device);
 	}
 
-	cvDestroyWindow(windowName.c_str());
+	cv::destroyWindow(windowName.c_str());
 
 	liveView=false;
 
@@ -167,7 +167,6 @@ void CanonCamera::UpdateView()
     if(numTries > 20)
     {
         printf("ERROR: camera is taking too long for EdsDownloadEvfImage\n");
-
     }
 
     unsigned char* pByteImage = NULL;
@@ -177,10 +176,9 @@ void CanonCamera::UpdateView()
     if(err != EDS_ERR_OK)
     {
         printf("Error in EdsGetPointer Histogram: 0x%X\n", err);
-  
     }
 
-    EdsUInt32 size;
+    EdsUInt64 size;
     err = EdsGetLength(stream, &size);
     if(err != EDS_ERR_OK)
     {
@@ -211,8 +209,9 @@ void CanonCamera::UpdateView()
 
     }
 
-	liveImage = cvCreateImage(cvSize(imageInfo.width, imageInfo.height), IPL_DEPTH_8U, imageInfo.numOfComponents);
-
+    // OpenCV_4
+	// liveImage = (cv::Mat*)cvCreateImage(cv::Size(imageInfo.width, imageInfo.height), IPL_DEPTH_8U, imageInfo.numOfComponents);
+    liveImage = new cv::Mat(cv::Size(imageInfo.width, imageInfo.height), CV_8U, imageInfo.numOfComponents);
     
     EdsUInt32 DataSize = 0;
 
@@ -235,7 +234,7 @@ void CanonCamera::UpdateView()
         BYTE* pBits = (BYTE*)cImage.GetBits();
         if (pitch < 0)
             pBits += (pitch *(height -1));
-        memcpy(liveImage->imageData, pBits, abs(pitch) * height);
+        memcpy(liveImage->data, pBits, abs(pitch) * height);
 		
     }
 
@@ -272,10 +271,13 @@ void CanonCamera::UpdateView()
 
 	EdsRelease(image);
 	
-	cvShowImage(windowName.c_str(), liveImage);
+	cv::imshow(windowName.c_str(), *liveImage);
 
-	cvReleaseImage(&liveImage);
-    
+    //OpenCV_4
+	// cvReleaseImage(&liveImage);
+    liveImage->release();
+    //delete(liveImage);
+    //liveImage = NULL;
 }
 
 int CanonCamera::getNumOfCams()

@@ -1,10 +1,11 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
 #include "StdAfx.h"
@@ -50,7 +51,7 @@ void Utilities::normalize3dtable(double vec[3])
 }
 
 //convert image pixel to image 3d space point
-void Utilities::pixelToImageSpace(double p[3], CvScalar fc, CvScalar cc)
+void Utilities::pixelToImageSpace(double p[3], cv::Scalar fc, cv::Scalar cc)
 {
 
 	p[0]=(p[0]-cc.val[0])/fc.val[0];
@@ -117,7 +118,7 @@ cv::Point2f Utilities::undistortPoints( cv::Point2f p,  VirtualCamera cam)
 }
 
 //calculate the intersection point of a ray and a plane, given the normal and a point of the plane, and a point and the vector of the ray
-CvScalar Utilities::planeRayInter(CvScalar planeNormal,CvScalar planePoint, CvScalar rayVector, CvScalar rayPoint )
+cv::Scalar Utilities::planeRayInter(cv::Scalar planeNormal,cv::Scalar planePoint, cv::Scalar rayVector, cv::Scalar rayPoint )
 {
 	double l;
 	CvScalar point;
@@ -396,13 +397,13 @@ void Utilities::autoContrast(cv::Mat img_in, cv::Mat &img_out)
 	cv::merge(bgr,img_out);
 }
 
-void Utilities::autoContrast(IplImage *img_in, IplImage *img_out)
+void Utilities::autoContrast(cv::Mat &img_in, cv::Mat &img_out)
 {
 	
 	cv::Mat tmp_in = img_in;
 	cv::Mat tmp_out = img_out;
 
-	autoContrast(tmp_in,tmp_out);
+	autoContrast((cv::Mat)tmp_in,(cv::Mat&)tmp_out);
 	
 }
 

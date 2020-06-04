@@ -1,13 +1,15 @@
 //------------------------------------------------------------------------------------------------------------
-//* Copyright Â© 2010-2015 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
-//* Link: http://www.theICTlab.org                                                                           *
+//* Copyright © 2010-2013 Immersive and Creative Technologies Lab, Cyprus University of Technology           *
+//* Link: http://ict.cut.ac.cy                                                                               *
 //* Software developer(s): Kyriakos Herakleous                                                               *
 //* Researcher(s): Kyriakos Herakleous, Charalambos Poullis                                                  *
 //*                                                                                                          *
-//* License: Check the file License.md                                                                       *
+//* This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.*
+//* Link: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US                                        *
 //------------------------------------------------------------------------------------------------------------
 
 #include "StdAfx.h"
+#include <opencv2/imgproc.hpp>
 #include "Reconstructor.h"
 
 
@@ -206,7 +208,7 @@ void Reconstructor::loadCamImgs( std::string folder,std::string prefix,std::stri
 		//auto contrast
 		if(autoContrast)
 		{
-			Utilities::autoContrast(tmp,tmp);
+			Utilities::autoContrast((cv::Mat)tmp, (cv::Mat&)tmp);
 
 			if(saveAutoContrast)
 			{
@@ -221,7 +223,7 @@ void Reconstructor::loadCamImgs( std::string folder,std::string prefix,std::stri
 		{
 			color = tmp;
 		}
-		cv::cvtColor(tmp, tmp, CV_BGR2GRAY);
+		cv::cvtColor(tmp, tmp, cv::COLOR_BGR2GRAY);
 
 		camImgs.push_back(tmp);
 	}
